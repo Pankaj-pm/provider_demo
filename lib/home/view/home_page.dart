@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,11 +13,11 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<PlatformProvider>(
-      builder: (context, platformProvider, child) {
+      builder: (con, platformProvider, child) {
         if (platformProvider.isAndroid) {
           return Scaffold(
             appBar: AppBar(
-              title: Text("Home Page"),
+              title: Text("Home Page 11"),
             ),
             body: Center(
               child: Column(
@@ -32,18 +34,102 @@ class HomePage extends StatelessWidget {
                     color: Colors.red,
                     radius: 20,
                   ),
-                  CupertinoButton.filled(child: Text("Ok"), onPressed: () {
+                  CupertinoButton.filled(
+                      child: Text("Ok"),
+                      onPressed: () async {
 
-                  },pressedOpacity: 0.1),
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => NextPage(),
-                            ));
+                        await showCupertinoModalPopup(context: context, builder: (context) =>  Container(
+                          color: Colors.white,
+                          height: 300,
+                          child: CupertinoDatePicker(
+                            onDateTimeChanged: (value) {
+                              print(value);
+                            },
+                            dateOrder: DatePickerDateOrder.mdy,
+                            use24hFormat: true,
+                          ),
+                        ),);
+                        DateTime? selectedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime(2024, 1, 5),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2050),
+                          initialDatePickerMode: DatePickerMode.day,
+                          initialEntryMode: DatePickerEntryMode.calendarOnly,
+                        );
+
+                        var timeOfDay = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                          // initialEntryMode: TimePickerEntryMode.dialOnly,
+                          builder: (context, child) => MediaQuery(
+                            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+                            child: child!,
+                          ),
+                          /*confirmText: "okl",
+                          hourLabelText: "ooo"*/
+                          // initialEntryMode: TimePickerEntryMode.dialOnly
+                        );
+                        if (selectedDate != null) {
+                          // selectedDate=selectedDate.add(Duration(hours: timeOfDay?.hour ?? 0, minutes: timeOfDay?.minute ?? 0));
+                          selectedDate = DateTime(
+                            selectedDate.year,
+                            selectedDate.month,
+                            selectedDate.day,
+                            timeOfDay?.hour ?? 0,
+                            timeOfDay?.minute ?? 0,
+                          );
+                        }
+
+                        print(selectedDate.toString());
+                        print(timeOfDay.toString());
                       },
-                      child: Text("Next"))
+                      pressedOpacity: 0.1),
+
+                  Builder(builder: (context) {
+                    return ElevatedButton(
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            // barrierColor: Colors.red,
+                            isDismissible: false,
+                            enableDrag: false,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                                side: BorderSide(color: Colors.red, width: 10)),
+                            builder: (context) {
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  BackButton(),
+                                  Container(
+                                    width: double.infinity,
+                                    height: 300,
+                                    // decoration: BoxDecoration(
+                                    //     borderRadius: BorderRadius.vertical(top: Radius.circular(10)), color: Colors.grey),
+                                    padding: EdgeInsetsDirectional.all(10),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text("Title", style: TextStyle(color: Colors.red)),
+                                        Text("Desc " * 50, style: TextStyle(color: Colors.red)),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (context) => NextPage(),
+                          //     ));
+                        },
+                        child: Text("Next"));
+                  })
                 ],
               ),
             ),
@@ -71,9 +157,47 @@ class HomePage extends StatelessWidget {
                   CupertinoActivityIndicator(
                     color: Colors.red,
                   ),
-                  CupertinoButton.filled(child: Text("Ok"), onPressed: () {
-
-                  },pressedOpacity: 0.1),
+                  CupertinoButton.filled(child: Text("Ok"), onPressed: () {}, pressedOpacity: 0.1),
+                  Builder(builder: (context) {
+                    return ElevatedButton(
+                        onPressed: () {
+                          // for cupertino IOS
+                          showCupertinoModalPopup(
+                            context: context,
+                            builder: (context) {
+                              return CupertinoActionSheet(
+                                title: Text("Iphone"),
+                                message: Text("Buy product"),
+                                actions: [
+                                  CupertinoActionSheetAction(
+                                    onPressed: () {},
+                                    child: Text("Option 1"),
+                                    isDefaultAction: true,
+                                  ),
+                                  CupertinoActionSheetAction(
+                                    onPressed: () {},
+                                    child: Text("Option 2"),
+                                  ),
+                                  CupertinoActionSheetAction(onPressed: () {}, child: Text("Option 3")),
+                                  CupertinoActionSheetAction(onPressed: () {}, child: Text("Option 4")),
+                                ],
+                                cancelButton: CupertinoActionSheetAction(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("Back"),
+                                    isDestructiveAction: true),
+                              );
+                            },
+                          );
+                          // Provider.of<PlatformProvider>(context, listen: false).changePlatform();
+                        },
+                        style: ElevatedButton.styleFrom(),
+                        onFocusChange: (value) {
+                          print("onFocusChange ");
+                        },
+                        child: Text("Next 11"));
+                  }),
                   ElevatedButton(
                       onPressed: () {
                         Provider.of<PlatformProvider>(context, listen: false).changePlatform();
@@ -83,26 +207,22 @@ class HomePage extends StatelessWidget {
                         //       builder: (context) => NextPage(),
                         //     ));
                       },
-                      style: ElevatedButton.styleFrom(
-
+                      style: ElevatedButton.styleFrom(),
+                      child: Text("Next")),
+                  CupertinoContextMenu(
+                    child: Image.network(
+                      "https://m.media-amazon.com/images/W/MEDIAX_792452-T2/images/I/61h+Li6c1AL._SY741_.jpg",
+                      height: 150,
+                      width: 150,
+                    ),
+                    actions: [
+                      CupertinoContextMenuAction(
+                        child: Text("Option 1"),
+                        trailingIcon: Icons.settings,
                       ),
-                      onFocusChange: (value) {
-                        print("onFocusChange ");
-                      },
-                      child: Text("Next"))
-                  ,ElevatedButton(
-                      onPressed: () {
-                        Provider.of<PlatformProvider>(context, listen: false).changePlatform();
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //       builder: (context) => NextPage(),
-                        //     ));
-                      },
-                      style: ElevatedButton.styleFrom(
-
-                      ),
-                      child: Text("Next"))
+                      CupertinoContextMenuAction(child: Text("Option 2")),
+                    ],
+                  )
                 ],
               ),
             ),
