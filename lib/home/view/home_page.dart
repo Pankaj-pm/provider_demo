@@ -2,13 +2,18 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_demo/home/provider/counter_provider.dart';
 import 'package:provider_demo/home/provider/platform_provider.dart';
 import 'package:provider_demo/home/view/next_page.dart';
 
+
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+
+  final format = DateFormat("dd -MM -yyyy");
+
+  HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +35,15 @@ class HomePage extends StatelessWidget {
                       );
                     },
                   ),
+                  Consumer<CounterProvider>(
+                    builder: (context, counterProvider, child) {
+                      var dateTime = counterProvider.dateTime;
+                      return Text(
+                        format.format(dateTime),
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      );
+                    },
+                  ),
                   CupertinoActivityIndicator(
                     color: Colors.red,
                     radius: 20,
@@ -37,18 +51,22 @@ class HomePage extends StatelessWidget {
                   CupertinoButton.filled(
                       child: Text("Ok"),
                       onPressed: () async {
-
-                        await showCupertinoModalPopup(context: context, builder: (context) =>  Container(
-                          color: Colors.white,
-                          height: 300,
-                          child: CupertinoDatePicker(
-                            onDateTimeChanged: (value) {
-                              print(value);
-                            },
-                            dateOrder: DatePickerDateOrder.mdy,
-                            use24hFormat: true,
+                        await showCupertinoModalPopup(
+                          context: context,
+                          builder: (context) => Container(
+                            color: Colors.white,
+                            height: 300,
+                            child: CupertinoDatePicker(
+                              onDateTimeChanged: (value) {
+                                Provider.of<CounterProvider>(context, listen: false).changeDate(value);
+                                print(value);
+                              },
+                              dateOrder: DatePickerDateOrder.mdy,
+                              // mode: CupertinoDatePickerMode.mothYear,
+                              use24hFormat: false,
+                            ),
                           ),
-                        ),);
+                        );
                         DateTime? selectedDate = await showDatePicker(
                           context: context,
                           initialDate: DateTime(2024, 1, 5),
@@ -85,7 +103,6 @@ class HomePage extends StatelessWidget {
                         print(timeOfDay.toString());
                       },
                       pressedOpacity: 0.1),
-
                   Builder(builder: (context) {
                     return ElevatedButton(
                         onPressed: () {
@@ -129,7 +146,42 @@ class HomePage extends StatelessWidget {
                           //     ));
                         },
                         child: Text("Next"));
-                  })
+                  }),
+                  Builder(builder: (context) {
+                    return ElevatedButton(
+                        onPressed: () {
+                          showCupertinoModalPopup(
+                            context: context,
+                            builder: (context) {
+                              return CupertinoAlertDialog(
+                                title: Text("Title"),
+                                content: Text("Hello Good morning"),
+                                actions: [
+                                  TextButton(onPressed: () {
+                                    Navigator.pop(context);
+                                  }, child: Text("Cancel")),
+                                  TextButton(onPressed: () {
+                                    Navigator.pop(context);
+                                  }, child: Text("Ok"))
+                                  ,TextButton(onPressed: () {
+                                    Navigator.pop(context);
+                                  }, child: Text("Ok"))
+                                  ,TextButton(onPressed: () {
+                                    Navigator.pop(context);
+                                  }, child: Text("Cancel")),
+                                  TextButton(onPressed: () {
+                                    Navigator.pop(context);
+                                  }, child: Text("Ok"))
+                                  ,TextButton(onPressed: () {
+                                    Navigator.pop(context);
+                                  }, child: Text("Ok"))
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: Text("Next"));
+                  }),
                 ],
               ),
             ),
