@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_demo/home/provider/counter_provider.dart';
 import 'package:provider_demo/home/provider/platform_provider.dart';
+import 'package:provider_demo/home/view/bottom_nav.dart';
 import 'package:provider_demo/home/view/next_page.dart';
 
 
@@ -188,10 +189,15 @@ class HomePage extends StatelessWidget {
             floatingActionButton: FloatingActionButton(
                 heroTag: "hh",
                 onPressed: () {
-                  Provider.of<CounterProvider>(context, listen: false).increment();
-                  Provider.of<PlatformProvider>(context, listen: false).changePlatform();
+                  // Provider.of<CounterProvider>(context, listen: false).increment();
+                  // Provider.of<PlatformProvider>(context, listen: false).changePlatform();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BottomNave(),
+                      ));
                 },
-                child: Icon(Icons.add)),
+                child: Icon(Icons.remove)),
           );
         } else {
           return CupertinoPageScaffold(
@@ -252,12 +258,8 @@ class HomePage extends StatelessWidget {
                   }),
                   ElevatedButton(
                       onPressed: () {
-                        Provider.of<PlatformProvider>(context, listen: false).changePlatform();
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //       builder: (context) => NextPage(),
-                        //     ));
+                        // Provider.of<PlatformProvider>(context, listen: false).changePlatform();
+
                       },
                       style: ElevatedButton.styleFrom(),
                       child: Text("Next")),

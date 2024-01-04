@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:provider_demo/home/provider/bottom_nav_provider.dart';
 import 'package:provider_demo/home/provider/counter_provider.dart';
 import 'package:provider_demo/home/provider/platform_provider.dart';
 import 'package:provider_demo/home/view/home_page.dart';
@@ -21,6 +22,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => PlatformProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => BottomNavProvider(),
         ),
       ],
       builder: (context, child) {
