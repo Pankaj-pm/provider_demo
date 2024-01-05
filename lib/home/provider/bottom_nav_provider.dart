@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class BottomNavProvider extends ChangeNotifier {
   PageController pcontroller = PageController();
   int cIndex = 0;
+  Timer? timer;
 
   void changeIndex(int i) {
     cIndex = i;
@@ -12,7 +13,10 @@ class BottomNavProvider extends ChangeNotifier {
   }
 
   void startTimer() {
-    Timer.periodic(Duration(seconds: 2), (timer) {
+
+    // if(timer!=null) return;
+
+    timer ??=Timer.periodic(Duration(seconds: 2), (timer) {
       cIndex++;
       if (cIndex > 5) {
         cIndex = 0;
