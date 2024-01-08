@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class CounterProvider extends ChangeNotifier{
+class CounterProvider extends ChangeNotifier {
   int count=0;
   DateTime dateTime=DateTime.now();
   CupertinoTabController tabController=CupertinoTabController();

@@ -8,6 +8,7 @@ import 'package:provider_demo/home/provider/counter_provider.dart';
 import 'package:provider_demo/home/provider/platform_provider.dart';
 import 'package:provider_demo/home/view/bottom_nav.dart';
 import 'package:provider_demo/home/view/next_page.dart';
+import 'package:provider_demo/home/view/sliver_page.dart';
 
 class HomePage extends StatelessWidget {
   final format = DateFormat("dd -MM -yyyy");
@@ -102,6 +103,10 @@ class HomePage extends StatelessWidget {
                         print(timeOfDay.toString());
                       },
                       pressedOpacity: 0.1),
+                  ElevatedButton(onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SliverDemo(),));
+
+                  }, child: Text("Sliver")),
                   Builder(builder: (context) {
                     return ElevatedButton(
                         onPressed: () {
