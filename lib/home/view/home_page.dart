@@ -23,6 +23,14 @@ class HomePage extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               title: Text("Home Page 11"),
+              actions: [
+                Switch(
+                  value: platformProvider.isAndroid,
+                  onChanged: (value) {
+                    platformProvider.changePlatform();
+                  },
+                )
+              ],
             ),
             body: Center(
               child: Column(
@@ -103,10 +111,20 @@ class HomePage extends StatelessWidget {
                         print(timeOfDay.toString());
                       },
                       pressedOpacity: 0.1),
-                  ElevatedButton(onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => SliverDemo(),));
-
-                  }, child: Text("Sliver")),
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SliverDemo(),
+                            ));
+                      },
+                      child: Text("Sliver")),
+                  ElevatedButton(
+                      onPressed: () {
+                        Provider.of<PlatformProvider>(context, listen: false).changePlatform();
+                      },
+                      child: Text("Change Theme")),
                   Builder(builder: (context) {
                     return ElevatedButton(
                         onPressed: () {
@@ -370,6 +388,21 @@ class HomePage extends StatelessWidget {
                           //   onChanged: (value) {},
                           // ),
                           Icon(Icons.adaptive.share),
+                          CupertinoButton.filled(
+                            child: Text("Change Theme"),
+                            onPressed: () {
+                              Provider.of<PlatformProvider>(context, listen: false).changePlatform();
+                            },
+                          ),
+
+                          CupertinoButton.filled(
+                            child: Text("New Page"),
+                            onPressed: () {
+                              Navigator.push(context, CupertinoPageRoute(builder: (context) {
+                                return SliverDemo();
+                              },));
+                            },
+                          ),
 
                           CupertinoSegmentedControl(
                             children: {
